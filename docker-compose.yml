@@ -1,0 +1,47 @@
+services:
+  database:
+    image: postgres:18.6-alpine
+    container_name: my_website_db
+    restart: always
+    environment:
+      POSTGRES_DB: my_website_db
+      POSTGRES_USER: my_website_user
+      POSTGRES_PASSWORD: "@MyWebsite_1234"
+    volumes:
+      - my_website_data:/var/lib/postgresql
+    ports:
+      - "5532:5432"
+
+  web:
+    build:
+      context: ./code
+      args:
+        USER_ID: ${HOST_UID:-1000}
+        GROUP_ID: ${HOST_GID:-1000}
+
+    image: my_website_backend:1.0.0
+    container_name: my_website_backend
+    command: sh -c "chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /media /app\
+      && chmod -R 777 /media \
+      && su appuser -c 'sleep 1 && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000'"
+    user: root
+    volumes:
+      - ./code:/app
+      - ./media:/media
+
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    environment:
+      DB_NAME: my_website_db
+      DB_USER: my_website_user
+      DB_PASSWORD: "@MyWebsite_1234"
+      DB_HOST: database
+      DB_PORT: 5432
+      DEBUG: true
+      DJANGO_SECRET_KEY: "django-insecure--^ky^)*-7l7cuc+*m2ym!&qzt)416q4-myl=cduk)k)n*rh8l%"
+      DATABASE_API_KEY: "7MI7O3Qj.MWiLDPDLOY8uw20tiZZTeqmnoTV79yLm"
+
+volumes:
+  my_website_data:

@@ -1,0 +1,6 @@
+
+
+
+def get_lang(request):
+    raw = request.query_params.get("lang") or request.headers.get("Accept-Language", "fa")
+    return "en" if raw.lower().startswith("en") else "fa"
