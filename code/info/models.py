@@ -2,7 +2,7 @@ from django.db import models
 from utils.abstract_models import TimeStamped, Publishment
 
 
-class SiteProfile(TimeStamped, Publishment):
+class SiteInfo(TimeStamped):
     """Singleton: the intro/hero data of the site (only one row, pk=1)."""
  
     name_fa = models.CharField(verbose_name="Name (Persian)", max_length=100)
