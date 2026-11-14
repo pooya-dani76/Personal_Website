@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # internal apps
     'info',
+    'skill',
     # external apps
     'corsheaders',
     'rest_framework',

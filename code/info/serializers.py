@@ -1,24 +1,11 @@
 from rest_framework import serializers
 from .models import SiteInfo
 from utils.services import lf
-
-
-class LocalizedSerializer(serializers.ModelSerializer):
-    """Collapses `<name>_fa` / `<name>_en` into one `<name>` based on context['lang']."""
-
-    localized_fields = ()
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        lang = self.context.get("lang", "fa")
-        for name in self.localized_fields:
-            fa = data.pop(f"{name}_fa", "") or ""
-            en = data.pop(f"{name}_en", "") or ""
-            data[name] = (en if lang == "en" else fa) or fa or en
-        return data
+from utils.schemas import LocalizedSerializer, BaseResponseSerializer
 
 
 class SiteInfoSerializer(LocalizedSerializer):
+    
     localized_fields = ("name", "role", "headline", "bio", "status")
     resume_url = serializers.SerializerMethodField()
 
@@ -37,3 +24,7 @@ class SiteInfoSerializer(LocalizedSerializer):
             return None
         request = self.context.get("request")
         return request.build_absolute_uri(f.url) if request else f.url
+    
+    
+class SiteInfoResponseSerializer(BaseResponseSerializer):
+    data = SiteInfoSerializer(allow_null=True) 

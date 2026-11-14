@@ -8,3 +8,6 @@ def get_lang(request):
 def lf(*names):
     """lf("name", "role") -> ["name_fa", "name_en", "role_fa", "role_en"]"""
     return [f"{n}_{lang}" for n in names for lang in ("fa", "en")]
+
+def success_message(info_name_en, info_name_fa, lang):
+    return f"{info_name_en} Retrived Successfully" if lang=="en" else f"{info_name_fa} با موفقیت بازگردانده شد"

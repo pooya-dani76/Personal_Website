@@ -23,6 +23,7 @@ class SiteInfo(TimeStamped):
     class Meta:
         verbose_name = "Site Profile"
         verbose_name_plural = "Site Profiles"
+        db_table = "site_profile"
  
     def __str__(self):
         return self.name_fa
