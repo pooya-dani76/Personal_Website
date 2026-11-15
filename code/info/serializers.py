@@ -6,14 +6,14 @@ from utils.schemas import LocalizedSerializer, BaseResponseSerializer
 
 class SiteInfoSerializer(LocalizedSerializer):
     
-    localized_fields = ("name", "role", "headline", "bio", "status")
+    localized_fields = ("name", "headline", "bio")
     resume_url = serializers.SerializerMethodField()
 
     class Meta:
         model = SiteInfo
         fields = [
             "avatar",
-            *lf("name", "role", "headline", "bio", "status"),
+            *lf("name", "headline", "bio"),
             "is_available", "resume_url",
         ]
 

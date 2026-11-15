@@ -4,9 +4,22 @@ from rest_framework.status import HTTP_200_OK
 from .models import Skill, SkillCategory
 from .serializers import SkillResponseSerializer, SkillCategoryResponseSerializer
 from utils.services import get_lang, success_message
+from utils.schemas import BaseErrorResponseSerializer, LANG_PARAM
+from drf_spectacular.utils import extend_schema
 
 
 class SkillView(APIView):
+    @extend_schema(
+        summary="Get all skills",
+        description="Retrieve a list of all published skills.",
+        responses={
+            200: SkillResponseSerializer,
+            403: BaseErrorResponseSerializer,
+        },
+        parameters=[
+            LANG_PARAM
+        ]
+    )
     def get(self, request):
         lang = get_lang(request)
         ctx = {"request": request, "lang": lang}
@@ -17,6 +30,17 @@ class SkillView(APIView):
     
 
 class SkillCategoryView(APIView):
+    @extend_schema(
+        summary="Get all skill categories",
+        description="Retrieve a list of all skill categories.",
+        responses={
+            200: SkillCategoryResponseSerializer,
+            403: BaseErrorResponseSerializer,
+        },
+        parameters=[
+            LANG_PARAM
+        ]
+    )
     def get(self, request):
         lang = get_lang(request)
         ctx = {"request": request, "lang": lang}

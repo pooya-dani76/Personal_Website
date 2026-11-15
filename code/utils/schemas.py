@@ -4,24 +4,41 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from drf_spectacular.utils import inline_serializer
 import os
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 
 
 LANG_PARAM = OpenApiParameter("lang", str, description="fa (default) or en. Accept-Language is also honored.")
 
 
-class LocalizedSerializer(serializers.ModelSerializer):
-    """Collapses `<name>_fa` / `<name>_en` into one `<name>` based on context['lang']."""
+@extend_schema_field(OpenApiTypes.STR)
+class LocalizedField(serializers.Field):
+    """Read-only field that picks `<base>_fa` or `<base>_en` based on context['lang']."""
 
+    def __init__(self, base, **kwargs):
+        self.base = base
+        kwargs["source"] = "*"
+        kwargs["read_only"] = True
+        super().__init__(**kwargs)
+
+    def to_representation(self, obj):
+        lang = self.context.get("lang", "fa")
+        fa = getattr(obj, f"{self.base}_fa", "") or ""
+        en = getattr(obj, f"{self.base}_en", "") or ""
+        return (en if lang == "en" else fa) or fa or en
+
+
+class LocalizedSerializer(serializers.ModelSerializer):
     localized_fields = ()
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        lang = self.context.get("lang", "fa")
+    def get_fields(self):
+        fields = super().get_fields()
         for name in self.localized_fields:
-            fa = data.pop(f"{name}_fa", "") or ""
-            en = data.pop(f"{name}_en", "") or ""
-            data[name] = (en if lang == "en" else fa) or fa or en
-        return data
+            has_fa = fields.pop(f"{name}_fa", None) is not None
+            has_en = fields.pop(f"{name}_en", None) is not None
+            if has_fa or has_en:  # فقط اگر در Meta.fields آمده باشد
+                fields[name] = LocalizedField(name)
+        return fields
 
 class BaseResponseSerializer(serializers.Serializer):
     message = serializers.CharField()
@@ -95,4 +112,4 @@ class BaseSafeImageSerializer(serializers.ModelSerializer):
 
 
 class BaseErrorResponseSerializer(serializers.Serializer):
-    message = serializers.JSONField(allow_null=True, default=None)
+    error = serializers.JSONField(allow_null=True, default=None)

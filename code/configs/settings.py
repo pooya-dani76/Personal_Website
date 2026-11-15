@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # internal apps
     'info',
     'skill',
+    'experience',
     # external apps
     'corsheaders',
     'rest_framework',

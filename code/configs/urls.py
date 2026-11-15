@@ -16,9 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import SecureSchemaView, SecureSwaggerView
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('info/', include('info.urls')),
     path('skills/', include('skill.urls')),
+    path('experience/', include('experience.urls')),
+    
+    path('api/schema/', SecureSchemaView.as_view(), name='schema'),
+    path('api/docs/', SecureSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
