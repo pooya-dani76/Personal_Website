@@ -1,5 +1,5 @@
 from django.db import models
-from utils.abstract_models import Publishment, TimeStamped
+from utils.abstract_models import Publishable, TimeStamped
 from django.utils.text import slugify
 
 
@@ -30,7 +30,7 @@ class SkillCategory(TimeStamped):
         
 
 
-class Skill(TimeStamped, Publishment):
+class Skill(TimeStamped, Publishable):
     name = models.CharField(verbose_name="Name", max_length=60, unique=True)
     category = models.ForeignKey(SkillCategory, on_delete=models.PROTECT, related_name="skills", verbose_name="Category")
 

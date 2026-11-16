@@ -1,10 +1,10 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from utils.abstract_models import Publishment, TimeStamped
+from utils.abstract_models import Publishable, TimeStamped
 from django_jalali.db import models as jmodels
 
 
-class Experience(Publishment, TimeStamped):
+class Experience(Publishable, TimeStamped):
     title_fa = models.CharField(verbose_name="Title (Persian)", max_length=150)
     title_en = models.CharField(verbose_name="Title (English)", max_length=150)
     organization_fa = models.CharField(verbose_name="Organization (Persian)", max_length=150, blank=True)

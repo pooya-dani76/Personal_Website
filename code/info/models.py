@@ -1,5 +1,5 @@
 from django.db import models
-from utils.abstract_models import TimeStamped, Publishment
+from utils.abstract_models import TimeStamped
 
 
 class SiteInfo(TimeStamped):
@@ -36,8 +36,8 @@ class SiteInfo(TimeStamped):
         self.pk = 1
         super().save(*args, **kwargs)
  
-    # def delete(self, *args, **kwargs):  # the singleton cannot be deleted
-    #     return None
+    def delete(self, *args, **kwargs):  # the singleton cannot be deleted
+        return None
  
     @classmethod
     def load(cls):

@@ -10,7 +10,7 @@ class TimeStamped(models.Model):
         abstract = True
  
  
-class Publishment(models.Model):
+class Publishable(models.Model):
     is_published = models.BooleanField(verbose_name="Is Published", default=True)
  
     class Meta:

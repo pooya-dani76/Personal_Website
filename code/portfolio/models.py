@@ -1,12 +1,12 @@
 from django.db import models
-from utils.abstract_models import Publishment, TimeStamped, Orderable
+from utils.abstract_models import Publishable, TimeStamped, Orderable
 from django_jalali.db import models as jmodels
 from skill.models import Skill
 from django.utils.text import slugify
 
 
 
-class Portfolio(Publishment, TimeStamped):
+class Portfolio(Publishable, TimeStamped):
     slug = models.SlugField(verbose_name="Slug", allow_unicode=True, unique=True, blank=True, editable=False)
     title_en = models.CharField(verbose_name="Title (English)", max_length=100,)
     title_fa = models.CharField(verbose_name="Title (Persian)", max_length=100)
@@ -40,7 +40,7 @@ class Portfolio(Publishment, TimeStamped):
         
         
 
-class PortfolioImage(Publishment, TimeStamped, Orderable):
+class PortfolioImage(Publishable, TimeStamped, Orderable):
     project = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(verbose_name="Image", upload_to="portfolio/gallery/")
     caption_fa = models.CharField(verbose_name="Caption (Persian)", max_length=150, blank=True)
@@ -57,7 +57,7 @@ class PortfolioImage(Publishment, TimeStamped, Orderable):
     
     
 
-class ProjectFeature(Publishment, TimeStamped, Orderable):
+class ProjectFeature(Publishable, TimeStamped, Orderable):
     project = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name="features")
     title_fa = models.CharField(verbose_name="Title (Persian)", max_length=120)
     title_en = models.CharField(verbose_name="Title (English)", max_length=120)
