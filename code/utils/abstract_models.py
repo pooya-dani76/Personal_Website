@@ -16,3 +16,8 @@ class Publishment(models.Model):
     class Meta:
         abstract = True
 
+class Orderable(models.Model):
+    order = models.PositiveSmallIntegerField(verbose_name="Order", default=0)
+    
+    class Meta:
+        abstract = True

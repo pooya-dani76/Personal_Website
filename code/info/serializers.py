@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from .models import SiteInfo
 from utils.services import lf
-from utils.schemas import LocalizedSerializer, BaseResponseSerializer
+from utils.schemas import LocalizedSerializer, BaseResponseSerializer, BaseSafeImageSerializer
 
 
-class SiteInfoSerializer(LocalizedSerializer):
+class SiteInfoSerializer(LocalizedSerializer, BaseSafeImageSerializer):
     
     localized_fields = ("name", "headline", "bio")
     resume_url = serializers.SerializerMethodField()

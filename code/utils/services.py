@@ -1,4 +1,14 @@
+from django.utils.html import format_html
 
+
+def thumb(file, height=60):
+    if not file:
+        return "—"
+    return format_html(
+        '<img src="{}" style="height:{}px;border-radius:8px;object-fit:cover">',
+        file.url,
+        height,
+    )
 
 
 def get_lang(request):

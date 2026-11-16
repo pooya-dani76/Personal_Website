@@ -5,8 +5,8 @@ from .models import Skill, SkillCategory
 
 @admin.register(SkillCategory)
 class SkillCategoryAdmin(admin.ModelAdmin):
-    list_display = ("name_fa", "name_en", "slug")
-    prepopulated_fields = {"slug": ("name_en",)}
+    list_display = ("name_fa", "name_en")
+    readonly_fields = ("slug",)
 
 
 @admin.register(Skill)
