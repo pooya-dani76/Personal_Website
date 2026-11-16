@@ -1,14 +1,14 @@
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
-
 from utils.schemas import BaseErrorResponseSerializer, LANG_PARAM
 from utils.services import get_lang, success_message
-
-from .models import Portfolio
+from .models import Portfolio, ProjectFeature, PortfolioImage
+from skill.models import Skill
 from .serializers import PortfolioDetailResponseSerializer, PortfolioListResponseSerializer
+from django.db.models import Prefetch
 
 
 class PortfolioListView(APIView):
@@ -21,7 +21,7 @@ class PortfolioListView(APIView):
     def get(self, request):
         lang = get_lang(request)
         ctx = {"request": request, "lang": lang}
-        portfolios = Portfolio.objects.filter(is_published=True).prefetch_related("technologies")
+        portfolios = Portfolio.objects.filter(is_published=True).prefetch_related(Prefetch("technologies", queryset=Skill.objects.filter(is_published=True)))
         message = success_message("Portfolios", "نمونه‌کارها", lang)
         serializer = PortfolioListResponseSerializer({"message": message, "data": portfolios}, context=ctx)
         return Response(serializer.data, status=HTTP_200_OK)
@@ -39,7 +39,11 @@ class PortfolioDetailView(APIView):
     def get(self, request, slug):
         lang = get_lang(request)
         ctx = {"request": request, "lang": lang}
-        queryset = Portfolio.objects.filter(is_published=True).prefetch_related("technologies", "images")
+        queryset = Portfolio.objects.filter(is_published=True).prefetch_related(
+            Prefetch("technologies", queryset=Skill.objects.filter(is_published=True)),
+            Prefetch("features", queryset=ProjectFeature.objects.filter(is_published=True)),
+            Prefetch("images", queryset=PortfolioImage.objects.filter(is_published=True)),
+        )
         portfolio = get_object_or_404(queryset, slug=slug)
         message = success_message("Portfolio", "نمونه‌کار", lang)
         serializer = PortfolioDetailResponseSerializer({"message": message, "data": portfolio}, context=ctx)

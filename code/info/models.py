@@ -4,6 +4,11 @@ from utils.abstract_models import TimeStamped, Publishment
 
 class SiteInfo(TimeStamped):
     """Singleton: the intro/hero data of the site (only one row, pk=1)."""
+    
+    class Education(models.TextChoices):
+        BACHELOR = "Bachelor", "Bachelor"
+        MASTER = "Master", "Master"
+        PHD = "PhD", "PhD"
  
     name_fa = models.CharField(verbose_name="Name (Persian)", max_length=100)
     name_en = models.CharField(verbose_name="Name (English)", max_length=100)
@@ -13,6 +18,9 @@ class SiteInfo(TimeStamped):
     bio_en = models.TextField(verbose_name="Bio (English)", blank=True)
     is_available = models.BooleanField(verbose_name="Available for Collaboration", default=True)
     avatar = models.ImageField(verbose_name="Avatar", upload_to="profile/", blank=True)
+    education = models.CharField(verbose_name="Education", max_length=200, blank=True, choices=Education.choices)
+    field_of_study = models.CharField(verbose_name="Field of Study", max_length=200, blank=True)
+    years_of_experience = models.PositiveIntegerField(verbose_name="Years of Experience", default=0)
     resume_fa = models.FileField(verbose_name="Resume (Persian)", upload_to="resume/", blank=True)
     resume_en = models.FileField(verbose_name="Resume (English)", upload_to="resume/", blank=True)
  

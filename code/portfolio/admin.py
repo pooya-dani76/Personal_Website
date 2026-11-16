@@ -1,17 +1,24 @@
 from django.contrib import admin
-from .models import Portfolio, PortfolioImage
+from .models import Portfolio, PortfolioImage, ProjectFeature
 from utils.services import thumb
     
 
 class PortfolioImageInline(admin.TabularInline):
     model = PortfolioImage
     extra = 1
-    fields = ("image", "image_preview", "caption_fa", "caption_en", "order")
-    readonly_fields = ("image_preview",)
+    fields = ("image", "image_preview", "caption_fa", "caption_en", "order", "is_published", "created_at", "updated_at")
+    readonly_fields = ("image_preview", "created_at", "updated_at")
 
     @admin.display(description="Preview")
     def image_preview(self, obj):
         return thumb(obj.image, 80)
+    
+    
+class ProjectFeatureInline(admin.TabularInline):
+    model = ProjectFeature
+    extra = 1
+    fields = ("title_fa", "title_en", "order", "is_published", "created_at", "updated_at")   
+    readonly_fields = ("created_at", "updated_at") 
 
 
 @admin.register(Portfolio)
@@ -23,7 +30,7 @@ class PortfolioAdmin(admin.ModelAdmin):
     search_fields = ("title_fa", "title_en")
     readonly_fields = ("cover_preview", "slug")
     filter_horizontal = ("technologies",)
-    inlines = [PortfolioImageInline]
+    inlines = [PortfolioImageInline, ProjectFeatureInline]
     fieldsets = (
         ("Main Information", {"fields": ("slug", "title_fa", "title_en", "cover_image", "cover_preview")}),
         ("Details", {"fields": ("description_fa", "description_en")}),

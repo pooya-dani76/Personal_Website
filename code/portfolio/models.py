@@ -53,4 +53,20 @@ class PortfolioImage(Publishment, TimeStamped, Orderable):
         db_table = "portfolio_image"
 
     def __str__(self):
-        return f"{self.project} #{self.pk}"        
+        return f"{self.project} #{self.pk}"    
+    
+    
+
+class ProjectFeature(Publishment, TimeStamped, Orderable):
+    project = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name="features")
+    title_fa = models.CharField(verbose_name="Title (Persian)", max_length=120)
+    title_en = models.CharField(verbose_name="Title (English)", max_length=120)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = "Project Key Feature"
+        verbose_name_plural = "Project Key Features"
+        db_table = "project_feature"
+
+    def __str__(self):
+        return f"{self.title_en} - {self.title_fa}({self.project})"       
