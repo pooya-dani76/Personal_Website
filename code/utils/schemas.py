@@ -6,6 +6,7 @@ from drf_spectacular.utils import inline_serializer
 import os
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_field
+from utils.services import get_lang, success_message
 
 
 LANG_PARAM = OpenApiParameter("lang", str, description="fa (default) or en. Accept-Language is also honored.")
@@ -49,11 +50,14 @@ class BaseResponseSerializer(serializers.Serializer):
 class BasePaginator(PageNumberPagination):
     page_size = 10 
     max_page_size = 100
-    message = ""
+    message_en = ""
+    message_fa = ""
 
     def get_paginated_response(self, data):
+        lang = get_lang(self.request)
+        message = self.message_en if lang == "en" else self.message_fa
         return Response({
-            'message': self.message,
+            'message': success_message(self.message_en, self.message_fa, lang),
             'count': self.page.paginator.count,
             'next': self.get_next_link(),
             'previous': self.get_previous_link(),

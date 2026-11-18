@@ -26,6 +26,8 @@ class ContactInfo(TimeStamped):
     instagram = models.URLField(verbose_name="Instagram", blank=True, null=True)
     telegram = models.URLField(verbose_name="Telegram", blank=True, null=True)
     whatsapp = models.URLField(verbose_name="Whatsapp", blank=True, null=True)
+    eita = models.URLField(verbose_name="Eita", blank=True, null=True)
+    bale = models.URLField(verbose_name="Bale", blank=True, null=True)
 
     def __str__(self):
         return "Contact Information"

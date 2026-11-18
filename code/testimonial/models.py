@@ -10,6 +10,9 @@ class Testimonial(Orderable, TimeStamped, Publishable):
     quote_en = models.TextField(verbose_name="Quote Text (English)")
     author_fa = models.CharField(verbose_name="Author Name (Persian)", max_length=120)
     author_en = models.CharField(verbose_name="Author Name (English)", max_length=120)
+    role_fa = models.CharField(verbose_name="Author Role (Persian)", max_length=150, blank=True)
+    role_en = models.CharField(verbose_name="Author Role (English)", max_length=150, blank=True)
+    avatar = models.ImageField(verbose_name="Avatar", upload_to="testimonials/", blank=True, null=True)
     rating = models.PositiveSmallIntegerField(verbose_name="Rating (1 to 5)", default=5, validators=[MinValueValidator(1), MaxValueValidator(5)])
     project = models.ForeignKey(Portfolio, on_delete=models.SET_NULL, null=True, blank=True, related_name="testimonials", verbose_name="Project")
 
@@ -20,4 +23,4 @@ class Testimonial(Orderable, TimeStamped, Publishable):
         db_table = "testimonial"
 
     def __str__(self):
-        return self.author_fa
+        return f"{self.author_en}({self.role_en}) - {self.rating} Stars"

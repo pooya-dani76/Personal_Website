@@ -21,3 +21,7 @@ def lf(*names):
 
 def success_message(info_name_en, info_name_fa, lang):
     return f"{info_name_en} Retrived Successfully" if lang=="en" else f"{info_name_fa} با موفقیت بازگردانده شد"
+
+
+def success_post_message(info_name_en, info_name_fa, lang):
+    return f"{info_name_en} Created Successfully" if lang=="en" else f"{info_name_fa} با موفقیت ایجاد شد"

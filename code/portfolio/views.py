@@ -7,8 +7,9 @@ from utils.schemas import BaseErrorResponseSerializer, LANG_PARAM
 from utils.services import get_lang, success_message
 from .models import Portfolio, ProjectFeature, PortfolioImage
 from skill.models import Skill
-from .serializers import PortfolioDetailResponseSerializer, PortfolioListResponseSerializer
+from .serializers import PortfolioDetailResponseSerializer, PortfolioListSerializer
 from django.db.models import Prefetch
+from .paginations import PortfolioPagination
 
 
 class PortfolioListView(APIView):
@@ -16,15 +17,17 @@ class PortfolioListView(APIView):
         summary="List Portfolios",
         description="Returns the published Portfolios",
         parameters=[LANG_PARAM],
-        responses={200: PortfolioListResponseSerializer, 403: BaseErrorResponseSerializer},
+        responses={200: PortfolioListSerializer, 403: BaseErrorResponseSerializer},
     )
     def get(self, request):
         lang = get_lang(request)
         ctx = {"request": request, "lang": lang}
+        paginator = PortfolioPagination()
         portfolios = Portfolio.objects.filter(is_published=True).prefetch_related(Prefetch("technologies", queryset=Skill.objects.filter(is_published=True)))
-        message = success_message("Portfolios", "نمونه‌کارها", lang)
-        serializer = PortfolioListResponseSerializer({"message": message, "data": portfolios}, context=ctx)
-        return Response(serializer.data, status=HTTP_200_OK)
+        paginated_portfolios = paginator.paginate_queryset(portfolios, request)
+        serializer = PortfolioListSerializer(paginated_portfolios, many=True, context=ctx)
+        return paginator.get_paginated_response(serializer.data)
+        
 
 
 class PortfolioDetailView(APIView):

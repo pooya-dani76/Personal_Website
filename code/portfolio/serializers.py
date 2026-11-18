@@ -52,9 +52,5 @@ class PortfolioDetailSerializer(PortfolioListSerializer, BaseSafeImageSerializer
                 ]
 
 
-class PortfolioListResponseSerializer(BaseResponseSerializer):
-    data = PortfolioListSerializer(many=True)
-
-
 class PortfolioDetailResponseSerializer(BaseResponseSerializer):
     data = PortfolioDetailSerializer()

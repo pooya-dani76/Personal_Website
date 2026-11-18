@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'skill',
     'experience',
     'portfolio',
+    'testimonial',
+    'contact_me',
     # external apps
     'corsheaders',
     'rest_framework',
@@ -184,7 +186,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework_api_key.permissions.HasAPIKey',
+        'rest_framework_api_key.permissions.HasAPIKey',
     ],
 }
 
@@ -206,3 +208,6 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -24,8 +24,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('info/', include('info.urls')),
     path('skills/', include('skill.urls')),
-    path('experience/', include('experience.urls')),
+    path('experiences/', include('experience.urls')),
     path('portfolios/', include('portfolio.urls')),
+    path('testimonials/', include('testimonial.urls')),
+    path('contact/', include('contact_me.urls')),
     
     path('api/schema/', SecureSchemaView.as_view(), name='schema'),
     path('api/docs/', SecureSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
